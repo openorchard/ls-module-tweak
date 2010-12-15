@@ -7,39 +7,33 @@ class Wheelman_Module extends Core_ModuleBase {
   {
     $info = new Core_ModuleInfo(
       "Wheelman",
-      "Limewheel skinning helper",
-      "Limewheel Creative Inc."
+      "Skinning helper extraordinaire",
+      "Eric Muyser"
     );
-     
+    
     $helper = new Wheelman_Helper();
-    $helper->on_handleRequest();
+    //$helper->on_handleRequest();
 
     $cms_update_elements = post('cms_update_elements');
 
     if(!$cms_update_elements) // let's get out of here!
       return $info;
-      
-    foreach($cms_update_elements as $element => $partial)
-    {
-			if(!$element) {
-				unset($_POST['cms_update_elements'][$element]);
-				
-				continue;
-			}
-			
+
+    foreach($cms_update_elements as $element => $partial) {
       if($partial == 'ls_cms_page') {
         unset($_POST['cms_update_elements'][$element]);
         
         $this->cms_update_element = $element;
       }
+      
+      return $info; // we're done here
     }
   
     return $info;
   }
   
-  public function subscribeEvents()
-  {
-    Backend::$events->addEvent('cms:onAfterHandleAjax', $this, 'before_handle_ajax');
+  public function subscribeEvents() {
+    Backend::$events->addEvent('cms:onAfterHandleAjax', $this, 'after_handle_ajax');
     Backend::$events->addEvent('cms:onBeforeDisplay', $this, 'before_page_display');
   }
   
@@ -48,8 +42,7 @@ class Wheelman_Module extends Core_ModuleBase {
     $controller->data['site_settings'] = $controller->render_partial('site:settings');
   }
 
-  public function before_handle_ajax()
-  {
+  public function after_handle_ajax() {
     if(!$this->cms_update_element)
       return;
     

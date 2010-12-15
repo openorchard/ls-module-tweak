@@ -10,8 +10,4 @@ class Wheelman_Helper {
   public function __contruct() {
     
   }
-  
-  public function on_handleRequest() {
-    
-  }
 }
