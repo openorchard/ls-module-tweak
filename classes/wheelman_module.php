@@ -33,7 +33,7 @@ class Wheelman_Module extends Core_ModuleBase {
   }
   
   public function subscribeEvents() {
-    Backend::$events->addEvent('cms:onAfterHandleAjax', $this, 'after_handle_ajax');
+    Backend::$events->addEvent('cms:onBeforeHandleAjax', $this, 'before_handle_ajax');
     Backend::$events->addEvent('cms:onBeforeDisplay', $this, 'before_page_display');
   }
   
@@ -42,16 +42,17 @@ class Wheelman_Module extends Core_ModuleBase {
     $controller->data['site_settings'] = $controller->render_partial('site:settings');
   }
 
-  public function after_handle_ajax() {
+  public function before_handle_ajax() {
+		// we want $site_settings either way
+    $controller = Cms_Controller::get_instance();
+    $controller->data['site_settings'] = $controller->render_partial('site:settings');
+		
     if(!$this->cms_update_element)
       return;
     
-    $params = array();
-    
-    $controller = Cms_Controller::get_instance();
-    $controller->data['site_settings'] = $controller->render_partial('site:settings');
     $controller->action();
     
+    $params = array(); // does nothing
     $page = Cms_Page::findByUrl(Phpr::$request->getCurrentUri(), $params);
     
     ob_start();
