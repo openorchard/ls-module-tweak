@@ -31,7 +31,7 @@ if(!function_exists('array_merge_recursive_distinct')) {
 	}
 }
 
-class Wheelman_Helper {
+class Tweak_Helper {
   public function __contruct() {
     
   }

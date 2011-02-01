@@ -1,17 +1,17 @@
 <?
 
-class Wheelman_Module extends Core_ModuleBase {
+class Tweak_Module extends Core_ModuleBase {
   public $cms_update_element;
   
   protected function createModuleInfo()
   {
     $info = new Core_ModuleInfo(
-      "Wheelman",
-      "Skinning helper extraordinaire",
+      "Tweak",
+      "Developer tool for global site settings management",
       "Eric Muyser"
     );
     
-    $helper = new Wheelman_Helper();
+    $helper = new Tweak_Helper();
     //$helper->on_handleRequest();
 
     $cms_update_elements = post('cms_update_elements');
