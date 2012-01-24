@@ -176,7 +176,7 @@ Here is the complete listing:
 You can add your own aliases by creating your own custom module, and binding on the `tweak:onGetAliases` event. From that callback, return an array of your replacements. For example:
 
 ```php
-$aliases = array(
+return array(
 	'my_special_url' => root_url('/my_special_url')
 );
 ```
