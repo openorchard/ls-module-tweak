@@ -49,8 +49,15 @@
 			Backend::$events->add_event('cms:onGetTemplateContent', $this, 'get_cms_template_content');
 		}
 		
+		public function does_site_settings_exist() {
+			return Db_DbHelper::scalar('select id from partials where name = ? and theme_id = ?', array('site:settings', Cms_Theme::get_active_theme()->id));
+		}
+		
 		public function before_page_display() {
 			if($this->is_rendering_started) // have we started rendering? avoid looping
+				return;
+			
+			if(!$this->does_site_settings_exist())
 				return;
 			
 			$this->is_rendering_started = true; // we've started rendering
@@ -61,6 +68,9 @@
 		}
 	
 		public function before_handle_ajax() {
+			if(!$this->does_site_settings_exist())
+				return;
+				
 			// we want $site_settings for ajax
 			$controller = Cms_Controller::get_instance();
 			$controller->data['site_settings'] = $controller->render_partial('site:settings');
@@ -71,6 +81,9 @@
 				return;
 				
 			if($this->is_rendering_started) // have we started rendering? avoid looping
+				return;
+			
+			if(!$this->does_site_settings_exist())
 				return;
 			
 			$this->is_rendering_started = true; // we've started rendering
