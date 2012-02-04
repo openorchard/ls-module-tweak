@@ -76,7 +76,7 @@
 			$controller->data['site_settings'] = $controller->render_partial('site:settings');
 		}
 		
-		public function after_handle_ajax() {
+		public function after_handle_ajax($page) {
 			if(!$this->cms_update_element)
 				return;
 				
@@ -89,14 +89,9 @@
 			$this->is_rendering_started = true; // we've started rendering
 			
 			$controller = Cms_Controller::get_instance();
-			$controller->action();
-			
-			$params = array(); // does nothing
-			$page = Cms_Page::findByUrl(Phpr::$request->getCurrentUri(), $params);
 			
 			ob_start();
-			$params = array(); // does nothing
-			$controller->open($page, $params);
+			$controller->open($page, $controller->request_params);
 			ob_end_clean();
 		
 			echo ">>" . $this->cms_update_element . "<<";
