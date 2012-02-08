@@ -50,7 +50,12 @@
 		}
 		
 		public function does_site_settings_exist() {
-			return Db_DbHelper::scalar('select id from partials where name = ? and theme_id = ?', array('site:settings', Cms_Theme::get_active_theme()->id));
+			$active_theme = Cms_Theme::get_active_theme();
+			
+			if($active_theme)
+				return Db_DbHelper::scalar('select id from partials where name = ? and theme_id = ?', array('site:settings', $active_theme->id));
+			else
+				return Db_DbHelper::scalar('select id from partials where name = ?', array('site:settings'));
 		}
 		
 		public function before_page_display() {
@@ -76,7 +81,7 @@
 			$controller->data['site_settings'] = $controller->render_partial('site:settings');
 		}
 		
-		public function after_handle_ajax($page) {
+		public function after_handle_ajax() {
 			if(!$this->cms_update_element)
 				return;
 				
@@ -89,9 +94,14 @@
 			$this->is_rendering_started = true; // we've started rendering
 			
 			$controller = Cms_Controller::get_instance();
+			$controller->action();
+			
+			$params = array(); // does nothing
+			$page = Cms_Page::findByUrl(Phpr::$request->getCurrentUri(), $params);
 			
 			ob_start();
-			$controller->open($page, $controller->request_params);
+			$params = array(); // does nothing
+			$controller->open($page, $params);
 			ob_end_clean();
 		
 			echo ">>" . $this->cms_update_element . "<<";
