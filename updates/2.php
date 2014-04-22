@@ -1,10 +1,15 @@
 <?
 	
 	$partial = Cms_Partial::create()->find_by_name('site:settings');
-	
+	$current_theme_id = null;
+	if (Cms_Theme::is_theming_enabled() && ($theme = Cms_Theme::get_edit_theme()))
+		$current_theme_id = $theme->id;
+
+
 	if(!$partial) {
 		$partial = new Cms_Partial();
 		$partial->name = 'site:settings';
+		$partial->theme_id = $current_theme_id;
 		$partial->html_code = <<< EOH
 <?
 
